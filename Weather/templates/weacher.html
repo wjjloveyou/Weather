@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国天气应用</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">中国天气应用</h1>
+        <form id="weather-form">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="输入城市名称" aria-label="输入城市名称" aria-describedby="button-addon2" id="city-input">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">查询</button>
+            </div>
+        </form>
+        <div id="weather-info"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#weather-form').on('submit', function(event) {
+            event.preventDefault();
+            var city = $('#city-input').val();
+            $.get('/weather', {city: city}, function(data) {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    var weatherInfo = `
+                        <h2>${data.country}${data.city}, </h2>
+                        <p>天气： ${data.wea} </p>
+                        <p>气温：${data.tem}    </p>
+                        <p>风速：${data.win_speed}</p>
+                        <p>日期： ${data.date}</p>
+                        <p>湿度： ${data.humidity}  </p>
+                        <h1>天气预警信息</h1>
+                        <p>风向：${data.win} ${data.win_speed} (风速：${data.win_meter})</p>
+
+                        <p>能见度：${data.visibility}</p>
+                        <p>气压：${data.pressure}</p>
+                        <p>空气质量：${data.air} (PM2.5：${data.air_pm25})</p>
+                        <p>空气质量提示：${data.air_tips}</p>
+{#                         <p>空气：${data.alarm[0][alarm_type]}</p>#}
+
+
+                    `;
+                    $('#weather-info').html(weatherInfo);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
